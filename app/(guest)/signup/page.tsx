@@ -6,17 +6,6 @@ import Link from "next/link";
 const api = createApiInstance();
 
 export default function SignupPage() {
-  useEffect(() => {
-    const getDetails = async () => {
-      try {
-        const res = await api.get("/api");
-        console.log("Response: ", res);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    getDetails();
-  }, []);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

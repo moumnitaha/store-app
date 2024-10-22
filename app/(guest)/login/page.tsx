@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -9,21 +11,31 @@ export default function LoginPage() {
     password: "",
   });
 
-  //   useEffect(() => {
-  //     console.log("Loading ========> ", loading);
-  //     if (isAuthenticated) {
-  //       console.log("User is authenticated from Login");
-  //       navigate("/home");
-  //     } else {
-  //       console.log("User is not authenticated");
-  //     }
-  //   }, [loading]);
+  const router = useRouter();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("Form Data: ", formData);
+    const { email, password } = formData;
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    if (result.error) {
+      console.log("Error: ", result.error);
+    } else {
+      console.log("User: ", result);
+      // redirect("/home");
+      router.push("/home");
+    }
   };
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -51,7 +63,8 @@ export default function LoginPage() {
           Login
         </h2>
         <form
-        // onSubmit={(e) => handleLogin(e, formData, toast)}
+          // onSubmit={(e) => handleLogin(e, formData, toast)}
+          onSubmit={handleLogin}
         >
           <div className="mb-4">
             <label
