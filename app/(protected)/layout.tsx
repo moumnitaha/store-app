@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 export default function Layout({ children, session }) {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function Layout({ children, session }) {
         .then((data) => {
           if (data.status === 401) {
             console.error("Unauthorized");
-            router.push("/login");
+            // router.push("/login");
           } else if (data.status === 200) {
             console.log("Authorized: ", data);
             setUser({
@@ -65,6 +66,12 @@ export default function Layout({ children, session }) {
                 <h2 className="text-white">{user.name}</h2>
                 <h4 className="text-white">{user.email}</h4>
               </div>
+              <button
+                className="bg-red-500 text-white rounded-md p-2 ml-4"
+                onClick={() => signOut()}
+              >
+                Sign Out
+              </button>
             </div>
           </div>
           {children}

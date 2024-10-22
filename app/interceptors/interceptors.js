@@ -3,7 +3,7 @@ import axios from "axios";
 const refreshToken = async () => {
   try {
     await axios.post(
-      "http://localhost:3001/refresh",
+      "http://localhost:3000/refresh",
       {},
       { withCredentials: true }
     );
@@ -14,7 +14,7 @@ const refreshToken = async () => {
 
 const createApiInstance = () => {
   const api = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: "http://localhost:3000",
     withCredentials: true,
   });
   api.interceptors.response.use(

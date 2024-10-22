@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import createApiInstance from "../../interceptors/interceptors";
 import Link from "next/link";
+import axios from "axios";
 
 const api = createApiInstance();
 
@@ -32,7 +33,10 @@ export default function SignupPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await api.post("/api/signup", formData);
+      const response = await axios.post(
+        "http://localhost:3000/api/signup",
+        formData
+      );
       if (response.status === 201) {
         // toast.success("User created successfully");
         console.log("User created successfully");
