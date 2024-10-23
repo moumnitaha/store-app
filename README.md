@@ -1,3 +1,19 @@
+# Store Management Panel
+
+This is a full-stack CRUD application built with Next.js and PostgreSQL, designed for managing products in a store. The application provides an admin panel where you can add, edit, delete, and view products. It is built with a modern stack that leverages Next.js for both frontend and backend functionality, along with PostgreSQL for database management.
+
+## Features
+
+- **Product Management**: Add new products, edit existing ones, and delete products.
+- **Full-Stack Functionality**: Next.js is used for both server-side rendering and API handling.
+- **PostgreSQL Database**: The product data is stored in a PostgreSQL database, providing robust querying and data management.
+
+## Technologies Used
+
+- **Next.js**: Handles both the frontend and backend logic, allowing for a seamless user experience.
+- **PostgreSQL**: A powerful and scalable relational database used to store product data.
+- **Tailwind CSS**: Provides a modern, responsive UI design for the store management panel.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
