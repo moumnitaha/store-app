@@ -22,8 +22,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
   }
   const result = await query(
-    `INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *`,
-    [firstName, lastName, email, password]
+    `INSERT INTO users (first_name, last_name, email, password, avatar) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+    [
+      firstName,
+      lastName,
+      email,
+      password,
+      "https://profile.intra.42.fr/images/default.png",
+    ]
   );
   if (!result) {
     return NextResponse.json(
