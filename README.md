@@ -6,6 +6,7 @@ First, run the Postgres continer
 
 ````bash
 docker-compose up --build
+````
 
 Then, run the development server:
 
