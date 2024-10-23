@@ -1,9 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
+import {
+  HomeIcon,
+  BuildingStorefrontIcon,
+  PlusCircleIcon,
+  Cog6ToothIcon,
+  ClipboardDocumentListIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 
 export default function Layout({ children, session }) {
   const router = useRouter();
@@ -13,6 +22,7 @@ export default function Layout({ children, session }) {
     email: "",
     avatar: "",
   });
+  const location = usePathname();
   useEffect(() => {
     const checkSession = async () => {
       fetch("/api/me", {
@@ -25,7 +35,6 @@ export default function Layout({ children, session }) {
         .then((data) => {
           if (data.status === 401) {
             console.error("Unauthorized");
-            // router.push("/login");
           } else if (data.status === 200) {
             console.log("Authorized: ", data);
             setUser({
@@ -52,28 +61,98 @@ export default function Layout({ children, session }) {
         </div>
       ) : (
         <div>
-          <div className="flex justify-between items-center bg-stone-600 p-4 fixed w-full shadow-md">
-            <h1 className="text-3xl font-bold text-white">NextAuth</h1>
-            <div className="flex flex-row">
-              <Image
-                src={user.avatar}
-                alt={user.name}
-                width={50}
-                height={50}
-                className="rounded-full"
-              />
-              <div className="flex flex-col ml-4">
-                <h2 className="text-white">{user.name}</h2>
-                <h4 className="text-white">{user.email}</h4>
+          <nav className="flex flex-col items-center justify-start w-60 bg-slate-100 p-4 h-svh fixed z-40 text-gray-900 top-0 left-0">
+            <div className="flex flex-col">
+              <div className="flex flex-row">
+                <Image
+                  src={user.avatar}
+                  alt={user.name}
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+                <div className="flex flex-col ml-4">
+                  <h2 className="font-bold">{user.name}</h2>
+                  <h4 className="text-sm">{user.email}</h4>
+                </div>
+              </div>
+              <hr className="w-full border-t-2 border-gray-300 my-2" />
+              <div className="flex flex-col items-center justify-start min-h-svh -mb-36 font-poppins">
+                <Link
+                  className={`w-48 p-3 ${
+                    location === "/home"
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  }   rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/home"
+                >
+                  <HomeIcon className="h-5 w-5 inline-block mr-2" />
+                  Home
+                </Link>
+                <Link
+                  className={`w-48 p-3 ${
+                    location.includes("/product")
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  } rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/products"
+                >
+                  <BuildingStorefrontIcon className="h-5 w-5 inline-block mr-2" />
+                  Products
+                </Link>
+                <Link
+                  className={`w-48 p-3 ${
+                    location === "/addProduct"
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  } rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/addProduct"
+                >
+                  <PlusCircleIcon className="h-5 w-5 inline-block mr-2" />
+                  Add Product
+                </Link>
+                {/* <Link
+                  className={`w-48 p-3 ${
+                    location === "/orders"
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  } rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/orders"
+                >
+                  <ClipboardDocumentListIcon className="h-5 w-5 inline-block mr-2" />
+                  Orders
+                </Link>
+                <Link
+                  className={`w-48 p-3 ${
+                    location === "/addOrder"
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  } rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/addOrder"
+                >
+                  <PlusIcon className="h-5 w-5 inline-block mr-2" />
+                  Add Order
+                </Link> */}
+                <Link
+                  className={`w-48 p-3 ${
+                    location === "/settings"
+                      ? "bg-blue-100 text-blue-500"
+                      : "bg-transparent text-gray-800"
+                  } rounded-md font-medium hover:bg-blue-100 m-1`}
+                  href="/settings"
+                >
+                  <Cog6ToothIcon className="h-5 w-5 inline-block mr-2" />
+                  Settings
+                </Link>
               </div>
               <button
-                className="bg-red-500 text-white rounded-md p-2 ml-4"
                 onClick={() => signOut()}
+                className="w-48 p-3 bg-transparent text-red-500 border border-red-500 rounded-md font-medium hover:bg-red-500 hover:text-white font-poppins"
               >
-                Sign Out
+                LOGOUT
               </button>
             </div>
-          </div>
+          </nav>
           {children}
         </div>
       )}

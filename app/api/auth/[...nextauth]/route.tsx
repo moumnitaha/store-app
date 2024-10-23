@@ -1,5 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import { query } from "@/db";
+import { query } from "@/lib/db";
 import NextAuth from "next-auth";
 import NextAuthOptions from "next-auth";
 import { JWT } from "next-auth/jwt";

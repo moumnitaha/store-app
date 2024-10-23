@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS products (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255),
-  price DECIMAL(10, 2),
+  price INT DEFAULT 0,
   description TEXT,
   images VARCHAR(255)[],
   quantity INT DEFAULT 0,
@@ -63,3 +63,31 @@ INSERT INTO users (
   'sample_refresh_token',-- refresh_token
   'sample_verification_token' -- verification_token
 );
+
+INSERT INTO products (
+  title,
+  price,
+  description,
+  images,
+  quantity,
+  rate,
+  orders,
+  refunds,
+  category,
+  created_at,
+  updated_at
+) VALUES (
+  'Sample Product',      -- title
+  100,                -- price
+  'This is a sample product.', -- description
+  ARRAY['https://example.com/image.jpg'], -- images (as an array)
+  10,                    -- quantity
+  5.0,                   -- rate
+  0,                     -- orders
+  0,                     -- refunds
+  'Sample Category',     -- category
+  CURRENT_TIMESTAMP,     -- created_at
+  CURRENT_TIMESTAMP      -- updated_at
+);
+
+

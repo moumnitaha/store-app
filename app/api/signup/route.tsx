@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/db/index";
+import { query } from "@/lib/db/index";
 import { z } from "zod";
 
 export async function POST(req: NextRequest, res: NextResponse) {
