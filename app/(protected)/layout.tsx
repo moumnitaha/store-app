@@ -13,16 +13,20 @@ import {
   ClipboardDocumentListIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export default function Layout({ children, session }) {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({
     name: "",
     email: "",
     avatar: "",
   });
+
+  const router = useRouter();
   const location = usePathname();
+
   useEffect(() => {
     const checkSession = async () => {
       fetch("/api/me", {
@@ -35,6 +39,7 @@ export default function Layout({ children, session }) {
         .then((data) => {
           if (data.status === 401) {
             console.error("Unauthorized");
+            router.push("/login");
           } else if (data.status === 200) {
             console.log("Authorized: ", data);
             setUser({
@@ -55,6 +60,18 @@ export default function Layout({ children, session }) {
   }, []);
   return (
     <div className="bg-gray-100">
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       {loading ? (
         <div className="flex items-center justify-center min-h-screen">
           <h1>Loading...</h1>

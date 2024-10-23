@@ -1,8 +1,9 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import { query } from "@/lib/db";
 import NextAuth from "next-auth";
-import NextAuthOptions from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import bcrypt from "bcrypt";
 
 const getUserByEmail = async (email: string) => {
   const result = await query(`SELECT * FROM users WHERE email = $1`, [email]);
@@ -39,7 +40,10 @@ export const OPTIONS: NextAuthOptions = {
           const user = await getUserByEmail(credentials?.email);
           console.log("User => : ", user);
           if (user) {
-            const isMatch = user?.password === credentials.password;
+            const isMatch = await bcrypt.compare(
+              credentials?.password,
+              user.password
+            );
             if (isMatch) {
               return user;
             } else {

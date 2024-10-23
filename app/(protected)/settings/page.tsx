@@ -1,12 +1,55 @@
 "use client";
 
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { useContext, useState } from "react";
+import axios from "axios";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 function Settings() {
-  const toast = 0;
-  //   const { handleImageChange, user, updateInfos, changePass, isAuthenticated } =
-  //     useContext(AuthContext);
+  const handleImageChange = async (e, img) => {
+    e.preventDefault();
+    const response = await axios.post("/api/upload_avatar", {
+      img: img,
+    });
+    if (response.data.error) {
+      toast.error(response.data.error);
+    } else {
+      toast.success(response.data.message);
+    }
+  };
+  const updateInfos = async (e, toast, formData) => {
+    e.preventDefault();
+    const response = await axios.put("/api/update_infos", {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+    });
+    if (response.data.error) {
+      toast.error(response.data.error);
+    } else {
+      toast.success(response.data.message);
+    }
+  };
+  const changePass = async (e, passwordData) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put("/api/change_password", {
+        oldPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+      });
+      if (response.status === 400) {
+        console.log("Eeeeee => ", response);
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log("Error: ", error.response.data.message);
+      toast.error(error.response.data.message);
+      if (typeof error.response.data.message === "object") {
+        error.response.data.message.forEach((e) => toast.error(e.message));
+      }
+    }
+  };
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -46,7 +89,7 @@ function Settings() {
         pauseOnHover
       /> */}
       <span className="text-2xl font-bold text-gray-800 m-4 font-poppins">
-        <Cog6ToothIcon className="h-8 w-8 fill-current text-blue-500 inline-block mr-4" />
+        <Cog6ToothIcon className="h-8 w-8 fill-blue-500 text-white inline-block mr-4" />
         Settings
       </span>
       <span className="m-4 text-xl font-bold">Change Avatar</span>
@@ -152,7 +195,7 @@ function Settings() {
       <form
         className="w-1/4 h-fit flex flex-col justify-between items-center p-3"
         onSubmit={async (e) => {
-          await changePass(e, toast, passwordData);
+          await changePass(e, passwordData);
           setPasswordData({ oldPassword: "", newPassword: "" });
         }}
       >

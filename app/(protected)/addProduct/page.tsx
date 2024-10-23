@@ -3,12 +3,13 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 type Product = {
   title: string;
   description: string;
   quantity: number;
-  rates: number;
+  rate: number;
   price: number;
   image1?: string;
   image2?: string;
@@ -25,7 +26,7 @@ function addProduct() {
     title: "",
     description: "",
     quantity: 0,
-    rates: 0,
+    rate: 0,
     price: 0,
     image1: "",
     image2: "",
@@ -46,7 +47,7 @@ function addProduct() {
         description: formData.description,
         price: parseInt(formData.price),
         quantity: parseInt(formData.quantity),
-        rates: parseInt(formData.rates),
+        rate: parseInt(formData.rate),
         images: [
           formData.image1,
           formData.image2,
@@ -61,7 +62,7 @@ function addProduct() {
       });
       if (response.status === 200) {
         console.log("Product add successfully");
-        // toast.success("Product add successfully");
+        toast.success("Product add successfully");
         console.log(response.data);
         setEnabled(false);
         setTimeout(() => {
@@ -69,11 +70,17 @@ function addProduct() {
         }, 2000);
         // setProduct(response.data.product);
       } else {
-        // toast.error("Error adding product");
+        toast.error("Error adding product");
       }
     } catch (error) {
       console.error("Error:", error.response.data.error);
-      //   toast.error(error.response.data.error);
+      if (typeof error.response.data.error === "object") {
+        error.response.data.error.forEach((err) => {
+          toast.error(err.message);
+        });
+      } else {
+        toast.error(error.response.data.error);
+      }
     }
     // setShowModal(false);
   };
@@ -99,20 +106,8 @@ function addProduct() {
 
   return (
     <section className="flex flex-col items-start justify-start min-w-fit max-w-svw min-h-svh h-fit pl-60 bg-[#f9f9f9]">
-      {/* <ToastContainer
-        theme="dark"
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      /> */}
       <span className="text-2xl font-bold text-gray-800 m-4 font-poppins">
-        <PlusCircleIcon className="h-8 w-8 fill-current text-blue-500 inline-block mr-4" />
+        <PlusCircleIcon className="h-8 w-8 fill-blue-500 text-white inline-block mr-4" />
         Add Product
       </span>
       <form
@@ -171,14 +166,14 @@ function addProduct() {
         </div>
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col flex-1">
-            <label className="text-lg font-semibold px-2">Rates</label>
+            <label className="text-lg font-semibold px-2">Rate</label>
             <input
-              name="rates"
+              name="rate"
               type="number"
               min={0}
               max={5}
               className="p-2 m-2 border-2 border-gray-300 rounded-lg"
-              value={formData.rates}
+              value={formData.rate}
               onChange={handleChange}
             />
           </div>

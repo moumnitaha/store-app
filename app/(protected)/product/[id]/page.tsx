@@ -20,12 +20,18 @@ function Product() {
   const router = useRouter();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: ["price", "quantity", "rate"].includes(e.target.name)
+        ? Number(e.target.value)
+        : e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newproduct = {
+    console.log("form => ", formData);
+    const newproduct: Product = {
       id: formData.id,
       title: formData.title,
       description: formData.description,
@@ -42,17 +48,23 @@ function Product() {
       });
       if (response.status === 200) {
         console.log("Product updated successfully");
-        //   toast.success("Product updated successfully");
+        toast.success("Product updated successfully");
         console.log(response.data);
         setProduct(response.data.product);
         setShowModal(false);
       } else {
         console.error("Error updating product");
-        //   toast.error("Error updating product");
+        toast.error("Error updating product");
       }
     } catch (error) {
       console.error("Error:", error.response.data.error);
-      // toast.error(error.response.data.error);
+      if (typeof error.response.data.error === "object") {
+        error.response.data.error.forEach((e) => {
+          toast.error(e.message);
+        });
+      } else {
+        toast.error(error.response.data.error);
+      }
     }
   };
 
@@ -82,11 +94,11 @@ function Product() {
             images: product.images.filter((img, i) => i !== index),
           });
           console.log("Image deleted successfully");
-          // toast.success("Image deleted successfully");
+          toast.success("Image deleted successfully");
           return;
         }
         console.log("Product deleted successfully");
-        //   toast.success("Product deleted successfully");
+        toast.success("Product deleted successfully");
         console.log(response.data);
         setEnabled(false);
         setImg(null);
@@ -95,11 +107,11 @@ function Product() {
         }, 1000);
       } else {
         console.error("Error deleting product");
-        //   toast.error("Error deleting product");
+        toast.error("Error deleting product");
       }
     } catch (error) {
       console.error("Error:", error.response.data.error);
-      // toast.error(error.response.data.error);
+      toast.error(error.response.data.error);
     }
   };
 
@@ -108,7 +120,7 @@ function Product() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async (e) => {
-      const newProduct = {
+      const newProduct: Product = {
         id: product.id,
         title: product.title,
         description: product.description,
@@ -116,7 +128,7 @@ function Product() {
         quantity: product.quantity,
         rate: product.rate,
         images: [...product.images, e.target.result],
-        category: "",
+        category: product.category,
       };
       try {
         console.log(newProduct);
@@ -124,20 +136,20 @@ function Product() {
           product: newProduct,
         });
         if (response.status === 200) {
-          // toast.success("Product updated successfully");
+          toast.success("Product updated successfully");
           setProduct(response.data.product);
         } else {
-          // toast.error("Error updating product");
+          toast.error("Error updating product");
         }
       } catch (error) {
-        //   toast.error(error.response.data.error);
+        toast.error(error.response.data.error);
       }
     };
   };
 
   const params = useParams();
   console.log(params);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Product>({
     id: "",
     title: "",
     description: "",
@@ -152,7 +164,7 @@ function Product() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [img, setImg] = useState(null);
   const [enabled, setEnabled] = useState(true);
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<Product>({
     id: "",
     title: "",
     description: "",
@@ -197,18 +209,6 @@ function Product() {
   }, [params.id]);
   return (
     <section className="w-full h-screen flex flex-col items-start justify-start bg-[#f9f9f9] text-gray-950 pl-60">
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
       <span className="text-2xl font-bold text-gray-800 m-4">
         <Cog6ToothIcon className="h-8 w-8 fill-current text-blue-500 inline-block mr-4" />
         Edit Product
@@ -295,7 +295,7 @@ function Product() {
                 Category: {product.category}
               </p>
               <img
-                src={product.category.image}
+                src={`/categories/${product.category}/${product.category}.jpg`}
                 className="w-20 h-20 rounded-full border-4 border-slate-200 shadow-lg"
                 alt={product.category}
               />

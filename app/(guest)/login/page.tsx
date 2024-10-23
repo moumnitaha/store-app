@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -31,6 +33,7 @@ export default function LoginPage() {
     });
     if (result.error) {
       console.log("Error: ", result.error);
+      toast.error(result.error);
     } else {
       console.log("User: ", result);
       // redirect("/home");
@@ -46,18 +49,18 @@ export default function LoginPage() {
   }
   return (
     <section className="bg-gray-100 flex items-center justify-center min-h-screen">
-      {/* <ToastContainer
-			theme="dark"
-			position="top-right"
-			autoClose={2000}
-			hideProgressBar={false}
-			newestOnTop={false}
-			closeOnClick
-			rtl={false}
-			pauseOnFocusLoss={false}
-			draggable
-			pauseOnHover
-		  /> */}
+      <ToastContainer
+        theme="dark"
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+      />
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
           Login

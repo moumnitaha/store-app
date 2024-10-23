@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import createApiInstance from "../../interceptors/interceptors";
 import Link from "next/link";
 import axios from "axios";
-
-const api = createApiInstance();
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -38,16 +38,16 @@ export default function SignupPage() {
         formData
       );
       if (response.status === 201) {
-        // toast.success("User created successfully");
+        toast.success("User created successfully");
         console.log("User created successfully");
       } else {
         let data = response.data;
         console.error("Error creating user: ", response.status, data.message);
-        // toast.error(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
       console.error("Error:", error);
-      //   toast.error(error.response.data);
+      toast.error(error.response.data.message[0].message);
     }
   };
 
@@ -60,18 +60,18 @@ export default function SignupPage() {
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
-      {/* <ToastContainer
-			theme="dark"
-			position="top-right"
-			autoClose={2000}
-			hideProgressBar={false}
-			newestOnTop={false}
-			closeOnClick
-			rtl={false}
-			pauseOnFocusLoss={false}
-			draggable
-			pauseOnHover
-		  /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
           Sign Up
@@ -113,7 +113,6 @@ export default function SignupPage() {
               />
             </div>
           </div>
-
           <div className="mb-4">
             <label
               htmlFor="email"
@@ -131,7 +130,6 @@ export default function SignupPage() {
               required
             />
           </div>
-
           <div className="mb-6">
             <label
               htmlFor="password"

@@ -17,13 +17,13 @@ const addProductSchema = z.object({
     "Miscellaneous",
   ]),
   quantity: z.number().min(1).max(1_000),
-  rates: z.number().min(0).max(5),
+  rate: z.number().min(0).max(5),
 });
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    let { title, description, price, images, category, quantity, rates } =
+    let { title, description, price, images, category, quantity, rate } =
       body.product;
     try {
       addProductSchema.parse(body.product);
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     }
     const result = await query(
       "INSERT INTO products (title, description, price, images, category, quantity, rate) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-      [title, description, price, images, category, quantity, rates]
+      [title, description, price, images, category, quantity, rate]
     );
     return NextResponse.json({
       message: "Product received",
