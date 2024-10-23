@@ -2,7 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the Postgres continer
+First, run the Postgres container
 
 ````bash
 docker-compose up --build
