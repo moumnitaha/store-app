@@ -86,7 +86,7 @@ function Products() {
                 className="text-left px-6 py-3 text-slate-800 font-medium  cursor-pointer hover:text-blue-600 transition-colors hover:bg-slate-300 w-auto"
                 onClick={() => {
                   let sortedProducts = products.sort(
-                    (a, b) => idSort * a.id.localeCompare(b.id)
+                    (a, b) => idSort * a.id.toString().localeCompare(b.id)
                   );
                   setIdSort(idSort * -1);
                   setProducts([...sortedProducts]);
@@ -127,8 +127,7 @@ function Products() {
                 onClick={() => {
                   let sortedProducts = products.sort(
                     (a, b) =>
-                      categorySort *
-                      a.category.name.localeCompare(b.category.name)
+                      categorySort * a.category.localeCompare(b.category)
                   );
                   setCategorySort(categorySort * -1);
                   setProducts([...sortedProducts]);
@@ -227,7 +226,7 @@ function Products() {
                     className="text-slate-800 font-semibold hover:text-blue-600 transition-colors"
                   >
                     {"# "}
-                    {index}
+                    {product.id}
                   </Link>
                 </td>
                 <td className="px-6 py-4">

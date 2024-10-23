@@ -13,9 +13,7 @@ type Product = {
   quantity: number;
   rate: number;
   images: string[];
-  category: {
-    name: string;
-  };
+  category: string;
 };
 
 function Product() {
@@ -35,14 +33,13 @@ function Product() {
       quantity: formData.quantity,
       rate: formData.rate,
       images: formData.images,
-      category: {
-        id: 0,
-        name: formData.category,
-      },
+      category: formData.category,
     };
     try {
-      console.log(newproduct);
-      const response = await api.put("/updateProduct", { product: newproduct });
+      console.log("new => ", newproduct);
+      const response = await axios.put("/api/editproduct", {
+        product: newproduct,
+      });
       if (response.status === 200) {
         console.log("Product updated successfully");
         //   toast.success("Product updated successfully");
@@ -59,7 +56,7 @@ function Product() {
     }
   };
 
-  const deleteProduct = async (index) => {
+  const deleteProduct = async (index: number) => {
     try {
       console.log("==>", product.id);
       const newProduct = {
@@ -70,12 +67,9 @@ function Product() {
         images: product.images,
         quantity: product.quantity,
         rate: product.rate,
-        category: {
-          id: product.category.id,
-          name: product.category.name,
-        },
+        category: "",
       };
-      const response = await api.delete("/deleteProduct", {
+      const response = await axios.delete("/api/deleteproduct", {
         data: { product: newProduct, image: index },
       });
       if (response.status === 200) {
@@ -122,15 +116,11 @@ function Product() {
         quantity: product.quantity,
         rate: product.rate,
         images: [...product.images, e.target.result],
-        category: {
-          id: product.category.id,
-          name: product.category.name,
-          image: product.category.image,
-        },
+        category: "",
       };
       try {
         console.log(newProduct);
-        const response = await api.put("/updateProduct", {
+        const response = await axios.put("/api/editproduct", {
           product: newProduct,
         });
         if (response.status === 200) {
@@ -155,10 +145,7 @@ function Product() {
     quantity: 0,
     rate: 0,
     images: [],
-    category: {
-      id: 0,
-      name: "",
-    },
+    category: "",
   });
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -170,18 +157,12 @@ function Product() {
     title: "",
     description: "",
     price: 0,
-    createdAt: "",
-    updatedAt: "",
+    created_at: "",
+    updated_at: "",
     images: [],
     quantity: 0,
     rate: 0,
-    category: {
-      id: 0,
-      name: "",
-      image: "",
-      created_at: "",
-      updated_at: "",
-    },
+    category: "",
   });
   useEffect(() => {
     const getProduct = async () => {
@@ -203,18 +184,12 @@ function Product() {
           title: "",
           description: "",
           price: 0,
-          createdAt: "",
-          updatedAt: "",
+          created_at: "",
+          updated_at: "",
           images: [],
           quantity: 0,
           rate: 0,
-          category: {
-            id: 0,
-            name: "",
-            image: "",
-            created_at: "",
-            updated_at: "",
-          },
+          category: "",
         });
       }
     };
@@ -241,39 +216,33 @@ function Product() {
       {product.id && !loading ? (
         <div className="flex flex-col items-start p-6 bg-[#f9f9f9] rounded-lg  w-3/4 m-5 font-poppins border border-gray-200">
           <div className="flex-shrink-0 mb-6 flex-row flex w-full overflow-auto">
-            {product.images.length > 0 ? (
-              product.images.map((image, index) => (
-                <div
-                  className="min-w-64 h-64 aspect-square m-1 relative p-4"
-                  key={index}
-                >
-                  <button
-                    className="absolute left-0 top-0 bg-red-500 w-8 h-8 rounded-full font-extrabold text-white flex justify-center items-center cursor-pointer text-2xl"
-                    onClick={() => {
-                      setImg(index);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    <span className="m-auto">×</span>
-                  </button>
-                  <img
+            {product.images.length > 0
+              ? product.images.map((image, index) => (
+                  <div
+                    className="min-w-64 h-64 aspect-square m-1 relative p-4"
                     key={index}
-                    className={`w-full h-full aspect-square object-contain rounded-md bg-stone-200 cursor-pointer ${
-                      img === index ? "border-2 border-red-600 blur-sm" : ""
-                    }`}
-                    src={image}
-                    alt={product.title}
-                    onClick={() => window.open(image, "_blank")}
-                  />
-                </div>
-              ))
-            ) : (
-              <img
-                className="w-64 h-64 object-cover m-1"
-                src="https://via.placeholder.com/300"
-                alt={product.title}
-              />
-            )}
+                  >
+                    <button
+                      className="absolute left-0 top-0 bg-red-500 w-8 h-8 rounded-full font-extrabold text-white flex justify-center items-center cursor-pointer text-2xl"
+                      onClick={() => {
+                        setImg(index);
+                        setShowDeleteModal(true);
+                      }}
+                    >
+                      <span className="m-auto">×</span>
+                    </button>
+                    <img
+                      key={index}
+                      className={`w-full h-full aspect-square object-contain rounded-md bg-stone-200 cursor-pointer ${
+                        img === index ? "border-2 border-red-600 blur-sm" : ""
+                      }`}
+                      src={image}
+                      alt={product.title}
+                      onClick={() => window.open(image, "_blank")}
+                    />
+                  </div>
+                ))
+              : null}
             {product.images.length < 4 ? (
               <>
                 <label
@@ -323,12 +292,12 @@ function Product() {
             <p className="text-lg font-semibold">Rate: {product.rate}</p>
             <div className="flex flex-row items-center">
               <p className="text-lg font-semibold mr-4">
-                Category: {product.category.name}
+                Category: {product.category}
               </p>
               <img
                 src={product.category.image}
                 className="w-20 h-20 rounded-full border-4 border-slate-200 shadow-lg"
-                alt={product.category.name}
+                alt={product.category}
               />
             </div>
             <p className="text-sm mb-2">
@@ -339,11 +308,11 @@ function Product() {
             </p>
             {/* <p className="text-sm mb-2">
 				  Category Created At:{" "}
-				  {new Date(product.category.createdAt).toLocaleString("FR-fr")}
+				  {new Date(product.category.created_at).toLocaleString("FR-fr")}
 				</p>
 				<p className="text-sm">
 				  Category Updated At:{" "}
-				  {new Date(product.category.updatedAt).toLocaleString("FR-fr")}
+				  {new Date(product.category.updated_at).toLocaleString("FR-fr")}
 				</p> */}
           </div>
           <div className="flex flex-row items-center justify-end w-full mt-6">
@@ -359,7 +328,7 @@ function Product() {
                   price: product.price,
                   rate: product.rate,
                   quantity: product.quantity,
-                  category: product.category.name,
+                  category: product.category,
                   images: product.images,
                 });
               }}
@@ -405,7 +374,6 @@ function Product() {
                       </label>
                       <textarea
                         name="description"
-                        type="text-area"
                         className="p-2 border-2 border-gray-300 ml-2 mt-2 mr-2 rounded-lg min-h-32"
                         value={formData.description}
                         onChange={handleChange}

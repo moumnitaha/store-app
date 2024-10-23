@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db/index";
 import { z } from "zod";
+import path from "path";
+import fs from "fs";
 
 const addProductSchema = z.object({
   title: z.string().min(3).max(40),
@@ -21,14 +23,28 @@ const addProductSchema = z.object({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { title, description, price, images, category, quantity, rates } =
+    let { title, description, price, images, category, quantity, rates } =
       body.product;
-    console.log("body => ", body);
     try {
       addProductSchema.parse(body.product);
       NextResponse.next();
     } catch (e) {
       return NextResponse.json({ error: e.errors }, { status: 400 });
+    }
+    images = images.filter((image: string) => image !== "");
+    let index = 0;
+    for (let img of images) {
+      let imgExt = img.match(/^data:image\/(png|jpg|jpeg);base64,/)[1];
+      let rand = Math.floor(1000000 + Math.random() * 9000000);
+      let imgName = `/products/${title}_${index}_${rand}.${imgExt}`;
+      let imgPath = path.join("./public", imgName);
+      fs.writeFileSync(
+        imgPath,
+        img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
+        "base64"
+      );
+      images[index] = imgName;
+      index++;
     }
     const result = await query(
       "INSERT INTO products (title, description, price, images, category, quantity, rate) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
