@@ -4,6 +4,7 @@ This is a full-stack CRUD application built with Next.js and PostgreSQL, designe
 
 ## Features
 
+- **Registration/Login system**: you can create your own user, then log in with it and manage your store. 
 - **Product Management**: Add new products, edit existing ones, and delete products.
 - **Full-Stack Functionality**: Next.js is used for both server-side rendering and API handling.
 - **PostgreSQL Database**: The product data is stored in a PostgreSQL database, providing robust querying and data management.
