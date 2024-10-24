@@ -40,7 +40,7 @@ INSERT INTO products (
 ) VALUES (
   'Grey Hoodie',      -- title
   100,                -- price
-  'This is a sample product.', -- description
+  'This is a sample product. This is a sample product. This is a sample product. This is a sample product. This is a sample product. ', -- description
   ARRAY['/products/simple_item.jpg'], -- images (as an array)
   10,                    -- quantity
   4,                   -- rate
